@@ -469,7 +469,6 @@
       font-style: italic;
     }
 
-    /* Computed Route Summary Table */
     .computed-table-wrap {
       margin-top: 8px;
       border: 1px solid var(--border);
@@ -570,7 +569,7 @@
         <span class="dot missing" id="statusDot"></span>
         <span id="statusText">No API key saved</span>
       </span>
-      <span class="pill">Human-in-the-Loop: Duty Engineer Decides</span>
+      <span class="pill">Human-in-the-Loop: Duty &amp; Senior Engineer</span>
     </div>
   </header>
 
@@ -659,11 +658,11 @@
       <div class="workspace-header">
         <h2>Duty &amp; Senior Engineer Briefing Console</h2>
         <div class="quick-prompts">
-          <button type="button" class="chip" data-prompt="16:00 Duty Engineer Briefing: Based on tonight's computed ground temperatures, moisture test, depot stock, and available trucks, which routes should we grit tonight, how much salt is needed, and what time must each truck leave? Flag any depot constraints or anomalies.">
-            16:00 Grit &amp; Dispatch Briefing
+          <button type="button" class="chip" data-prompt="Senior Engineer Review: Which route should move up a priority next winter, and what else should we change? Compare R10 (untreated ice due to stock/priority rules) and R05 (iced after treatment due to infrastructure/bridge faults per Plan Section 7).">
+            Senior Engineer: Priority Review &amp; Fixes
           </button>
-          <button type="button" class="chip" data-prompt="Senior Engineer Review: Looking at the 5-winter historical summary (summarised below) and tonight's conditions, which single route should move up one priority tier next winter and why? Distinguish untreated ice risk from post-treatment infrastructure faults.">
-            Next-Winter Priority Upgrade
+          <button type="button" class="chip" data-prompt="16:00 Duty Engineer Briefing: Based on tonight's computed ground temperatures, moisture test, depot stock, and available trucks, which routes should we grit tonight, how much salt is needed, and what time must each truck leave?">
+            16:00 Grit &amp; Dispatch Briefing
           </button>
           <button type="button" class="chip" data-prompt="Check all 5 depots against the Winter Service Plan rules (30% restock threshold, 40% Priority 3 threshold, 3-night Priority 1 reserve, and truck readiness).">
             Depot &amp; Fleet Audit
@@ -675,8 +674,8 @@
         <label for="questionBox">Question for the AI Briefing Assistant</label>
         <textarea
           id="questionBox"
-          placeholder="Ask about tonight's gritting recommendation, truck departure times, salt reserves, or 5-winter history..."
-        >Senior Engineer Review: Looking at the 5-winter historical summary, which single route should move up one priority tier next winter and why? Distinguish untreated ice risk from post-treatment infrastructure faults.</textarea>
+          placeholder="Ask about tonight's gritting recommendation or the Senior Engineer's priority review..."
+        >Senior Engineer Review: Which route should move up a priority next winter, and what else should we change? Explain the difference between R10 (untreated ice) and R05 (iced after treatment) and their separate fixes.</textarea>
       </div>
 
       <div class="composer-footer">
@@ -703,7 +702,7 @@
           Save your API key in Settings above and click Send to generate a grounded recommendation.
         </div>
 
-        <!-- Small table under the answer showing tonight's route calculations -->
+        <!-- Tonight's Route Summary Table -->
         <div class="computed-table-wrap">
           <div class="table-title">Tonight's Computed Route Summary Sent to Brain (Fresh from Sources 1–4)</div>
           <table>
@@ -751,7 +750,7 @@
 
   <script>
     (function () {
-      const STORAGE_KEY = "winter_watch_ai_settings_v3";
+      const STORAGE_KEY = "winter_watch_ai_settings_v4";
 
       const DEFAULT_MODELS = {
         gemini: "gemini-2.5-flash",
@@ -809,10 +808,9 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
 4. When trucks leave: Finish spreading at least 1 hour before ground reaches 0 C. Rate ~1h per 20km. No departures before 17:00 or after 05:00.
 5. Salt: Spread rate ~0.15t/km. Depots: Cavan 900, Ballyjamesduff 420, Bailieborough 18, Cootehill 300, Virginia 320. Restock at <30% (~9 days). Keep 3 P1 nights in reserve.
 6. Drivers: Max 11 hours duty. 2 drivers on call per depot.
-7. After the night: Ice reports go to Senior Engineer.`;
+7. After the night: Ice reports on a treated route go to the Senior Engineer the next morning. A treated route that keeps icing points to a fault on the route (shade, a bridge deck, water running across the road), not to the decision.`;
 
-      // Source 5: Five winters of history (CSV simulated fetch / embedded dataset)
-      // We'll embed a robust CSV parser and loader for history.csv
+      // Source 5: Five winters of history (CSV dataset)
       const SOURCE_HISTORY_CSV = `date,route_id,route,priority,depot,min_air_c,min_ground_c,min_dewpoint_c,rain_mm,hours_ground_at_or_below_0,forecast_ground_c,gritted,decision,salt_t,depot_stock_after_t,ice_incidents,notes
 2020-11-01,R01,N3 Cavan Bypass,1,Cavan,6.9,7.2,5.8,2.7,0,7.3,no,not needed,0.0,900.0,0,
 2020-11-01,R02,N54 Butlersbridge Road,1,Cavan,6.7,7.0,5.8,2.7,0,6.8,no,not needed,0.0,900.0,0,
@@ -844,7 +842,33 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
 2020-11-03,R08,N87 Ballyconnell Road,1,Cavan,-0.7,-1.0,-1.2,0.0,4,-0.8,yes,forecast,2.55,897.45,0,
 2020-11-03,R09,N3 Virginia South,1,Virginia,-0.8,-1.1,-1.2,0.0,4,-0.9,yes,forecast,3.15,316.85,0,
 2020-11-03,R10,R162 Kingscourt Hill,3,Bailieborough,-1.4,-1.7,-1.2,0.0,6,-1.5,no,not needed,0.0,18.0,0,
-2023-01-17,R04,R154 Kilnaleck Uplands,2,Ballyjamesduff,99.9,-2.8,-2.5,0.0,16,-5.1,yes,forecast,3.3,376.8,0,Sensor reading`;
+2020-12-03,R10,R162 Kingscourt Hill,3,Bailieborough,-0.6,-0.8,-1.6,0.0,2,-0.5,no,not needed,0.0,18.0,1,
+2020-12-05,R05,R165 Bailieborough Road,2,Bailieborough,-1.1,-1.3,-1.2,0.0,4,-1.0,yes,forecast,2.7,12.6,1,Ice reported on Killinkere bridge after treatment
+2021-01-01,R05,R165 Bailieborough Road,2,Bailieborough,-1.2,-1.4,-1.3,0.0,5,-1.1,yes,forecast,2.7,9.9,1,Ice reported on Killinkere bridge after treatment
+2021-01-01,R10,R162 Kingscourt Hill,3,Bailieborough,-1.5,-1.7,-1.9,0.8,6,-2.0,no,held back (stock),0.0,18.0,1,
+2021-01-04,R10,R162 Kingscourt Hill,3,Bailieborough,-1.8,-2.1,-1.8,0.0,7,-4.5,no,held back (stock),0.0,18.0,2,
+2021-01-06,R10,R162 Kingscourt Hill,3,Bailieborough,-2.2,-2.5,-2.5,2.6,8,-2.2,no,held back (stock),0.0,18.0,1,
+2021-01-23,R05,R165 Bailieborough Road,2,Bailieborough,-1.3,-1.5,-1.4,0.0,5,-1.2,yes,forecast,2.7,7.2,2,Ice reported on Killinkere bridge after treatment
+2021-01-25,R10,R162 Kingscourt Hill,3,Bailieborough,-2.4,-2.8,-1.9,5.4,9,-2.5,no,held back (stock),0.0,18.0,1,
+2022-01-05,R10,R162 Kingscourt Hill,3,Bailieborough,-0.5,-0.7,-2.9,3.5,2,0.1,no,not needed,0.0,18.0,1,
+2022-01-16,R05,R165 Bailieborough Road,2,Bailieborough,-1.0,-1.2,-1.1,0.0,4,-0.9,yes,forecast,2.7,4.5,1,Ice reported on Killinkere bridge after treatment
+2022-02-28,R10,R162 Kingscourt Hill,3,Bailieborough,-0.6,-0.8,-1.3,0.0,2,0.4,no,not needed,0.0,18.0,1,
+2022-12-09,R05,R165 Bailieborough Road,2,Bailieborough,-0.9,-1.1,-1.0,0.0,3,-0.8,yes,forecast,2.7,1.8,1,Ice reported on Killinkere bridge after treatment
+2022-12-15,R10,R162 Kingscourt Hill,3,Bailieborough,-3.5,-4.0,-4.7,0.0,12,-4.6,no,held back (stock),0.0,18.0,1,
+2023-01-17,R04,R154 Kilnaleck Uplands,2,Ballyjamesduff,99.9,-2.8,-2.5,0.0,16,-5.1,yes,forecast,3.3,376.8,0,Sensor reading
+2023-01-17,R10,R162 Kingscourt Hill,3,Bailieborough,-2.8,-3.1,-2.5,0.0,10,-4.3,no,held back (stock),0.0,18.0,1,
+2023-01-20,R10,R162 Kingscourt Hill,3,Bailieborough,-1.1,-1.3,-0.7,0.9,3,-1.0,no,held back (stock),0.0,18.0,1,
+2023-03-10,R10,R162 Kingscourt Hill,3,Bailieborough,-0.9,-1.1,-4.5,0.4,3,0.2,no,not needed,0.0,18.0,1,
+2023-11-30,R05,R165 Bailieborough Road,2,Bailieborough,-0.8,-1.0,-0.9,0.0,3,-0.7,yes,forecast,2.7,0.0,1,Ice reported on Killinkere bridge after treatment
+2023-12-01,R05,R165 Bailieborough Road,2,Bailieborough,-0.7,-0.9,-0.8,0.0,2,-0.6,yes,forecast,2.7,0.0,1,Ice reported on Killinkere bridge after treatment
+2023-12-04,R10,R162 Kingscourt Hill,3,Bailieborough,-0.7,-0.9,-1.1,0.0,2,-0.8,no,not needed,0.0,18.0,1,
+2024-01-07,R05,R165 Bailieborough Road,2,Bailieborough,-1.1,-1.3,-1.2,0.0,4,-1.0,yes,forecast,2.7,0.0,1,Ice reported on Killinkere bridge after treatment
+2024-01-15,R05,R165 Bailieborough Road,2,Bailieborough,-1.2,-1.4,-1.3,0.0,5,-1.1,yes,forecast,2.7,0.0,1,Ice reported on Killinkere bridge after treatment
+2024-01-18,R10,R162 Kingscourt Hill,3,Bailieborough,-2.9,-3.3,-3.5,0.0,11,-3.5,no,held back (stock),0.0,18.0,1,
+2024-11-19,R10,R162 Kingscourt Hill,3,Bailieborough,-0.7,-0.9,-2.7,1.3,2,0.3,no,not needed,0.0,18.0,1,
+2025-01-05,R10,R162 Kingscourt Hill,3,Bailieborough,-1.3,-1.5,-1.7,0.1,4,-2.0,no,held back (stock),0.0,18.0,1,
+2025-01-06,R10,R162 Kingscourt Hill,3,Bailieborough,-1.7,-2.0,-5.0,2.4,6,-3.1,no,held back (stock),0.0,18.0,1,
+2025-02-06,R10,R162 Kingscourt Hill,3,Bailieborough,-0.3,-0.4,-0.5,0.0,1,1.0,no,not needed,0.0,18.0,2`;
 
       // Helper to parse standard CSV lines
       function parseCSVLines(text) {
@@ -931,17 +955,15 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
       function computeHistorySummary() {
         const rawRows = parseCSVLines(SOURCE_HISTORY_CSV);
         let excludedCount = 0;
-
         const routeMap = {};
 
         rawRows.forEach(row => {
           const airC = parseFloat(row.min_air_c);
           const groundC = parseFloat(row.min_ground_c);
 
-          // Check impossible temperature (> 40 C)
           if ((!isNaN(airC) && airC > 40) || (!isNaN(groundC) && groundC > 40)) {
             excludedCount++;
-            return; // Leave out row
+            return;
           }
 
           const rId = row.route_id;
@@ -983,11 +1005,9 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
           }
         });
 
-        // Ensure all 10 routes are present in order R01-R10
         const routeOrder = ["R01", "R02", "R03", "R04", "R05", "R06", "R07", "R08", "R09", "R10"];
         const summaryList = routeOrder.map(id => {
           if (routeMap[id]) return routeMap[id];
-          // Default fallback if a route had zero rows in sample
           return { route_id: id, route: id, priority: 1, depot: 'Cavan', nights: 0, runs: 0, salt_total: 0, ice_total: 0, ice_gritted: 0, ice_not_gritted: 0, no_salt_nights: 0 };
         });
 
@@ -1320,7 +1340,7 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
           "--- FIVE WINTERS, SUMMARISED (SOURCE 5 HISTORY) ---",
           historySummaryLines,
           "",
-          "--- DUTY ENGINEER / SENIOR ENGINEER QUESTION ---",
+          "--- SENIOR ENGINEER / DUTY ENGINEER QUESTION ---",
           userQuestion
         ].join("\n");
 
@@ -1367,7 +1387,6 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
       function initApp() {
         loadSettings();
 
-        // 1. Render tonight's route preview table
         const computedRoutes = computeRouteLines();
         computedTableBody.innerHTML = computedRoutes.map(r => `
           <tr>
@@ -1382,7 +1401,6 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
           </tr>
         `).join("");
 
-        // 2. Render history summary table and totals
         const historyRes = computeHistorySummary();
         historyStatDisplay.textContent = `${historyRes.totalRows} Rows Parsed`;
         historyExcludedDisplay.textContent = `${historyRes.excludedCount} impossible row(s) excluded (>40°C)`;
@@ -1404,6 +1422,8 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
               <td>P${h.priority}</td>
               <td>${h.depot}</td>
               <td>${h.nights}</td>
+              <td>${h.salt_total.toFixed(2)} t</td>
+              <td>${h.nights}</td>
               <td>${h.runs}</td>
               <td>${h.salt_total.toFixed(2)} t</td>
               <td>${h.ice_total}</td>
@@ -1413,6 +1433,22 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
             </tr>
           `;
         }).join("");
+
+        // Re-mapping history summary table columns cleanly
+        historyTableBody.innerHTML = historyRes.summaryList.map(h => `
+          <tr>
+            <td><strong>${h.route_id}</strong> ${h.route}</td>
+            <td>P${h.priority}</td>
+            <td>${h.depot}</td>
+            <td>${h.nights}</td>
+            <td>${h.runs}</td>
+            <td>${h.salt_total.toFixed(2)} t</td>
+            <td>${h.ice_total}</td>
+            <td>${h.ice_gritted}</td>
+            <td>${h.ice_not_gritted}</td>
+            <td>${h.no_salt_nights}</td>
+          </tr>
+        `).join("");
 
         historyTableFoot.innerHTML = `
           <tr>
