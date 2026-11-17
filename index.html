@@ -356,9 +356,23 @@
     .chip:hover { background: rgba(59, 130, 246, 0.25); }
 
     textarea#questionBox {
+      width: 100%;
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 9px 12px;
       min-height: 88px;
       resize: vertical;
       line-height: 1.5;
+    }
+
+    textarea#questionBox:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
     }
 
     .composer-footer {
@@ -456,13 +470,8 @@
     th { background: rgba(255, 255, 255, 0.02); font-weight: 600; color: var(--text-muted); }
     tr:last-child td { border-bottom: none; }
 
-    /* Highlighted treatment row styling */
-    tr.recommend-treatment {
-      background: rgba(16, 185, 129, 0.08);
-    }
-    tr.recommend-treatment td {
-      border-bottom-color: rgba(16, 185, 129, 0.2);
-    }
+    tr.recommend-treatment { background: rgba(16, 185, 129, 0.08); }
+    tr.recommend-treatment td { border-bottom-color: rgba(16, 185, 129, 0.2); }
 
     .tag {
       display: inline-block;
@@ -509,7 +518,7 @@
   </header>
 
   <main>
-    <!-- Collapsible Settings Panel -->
+    <!-- Collapsible Settings Panel (Safe for GitHub: No Key Hardcoded) -->
     <details class="card settings-panel" id="settingsPanel" open>
       <summary>
         <span class="summary-left">
@@ -526,8 +535,6 @@
             <label for="providerSelect">Provider</label>
             <select id="providerSelect">
               <option value="gemini">Google Gemini</option>
-              <option value="openai">OpenAI</option>
-              <option value="anthropic">Anthropic</option>
             </select>
           </div>
 
@@ -717,7 +724,6 @@ Version 2026/27. Practice material for BDAIB at NCI.
         });
       }
 
-      // Dynamic 18-Hour Lookahead Calculation & Treatment Recommendation logic
       function computeRouteLines() {
         const routesArr = parseCSVLines(SOURCE_ROUTES_CSV);
         const computed = [];
@@ -749,7 +755,6 @@ Version 2026/27. Practice material for BDAIB at NCI.
 
           const priority = Number(r.priority);
           let recommend = false;
-          // Apply plan rule evaluation for tonight
           if (priority === 1 && minSoil <= 1.0 && isWet) recommend = true;
           if (priority === 2 && minSoil <= 0.5 && isWet) recommend = true;
           if (priority === 3 && minSoil <= -1.0 && isWet) recommend = true;
@@ -920,7 +925,7 @@ Version 2026/27. Practice material for BDAIB at NCI.
           settingsPanel.open = true;
           apiKeyInput.focus();
           errorTitle.textContent = "Missing API Key";
-          errorDetail.textContent = "Please save your API key in Settings above.";
+          errorDetail.textContent = "Please paste and save your API key in the Model & API Key Settings panel above.";
           errorBox.classList.add("visible");
           return;
         }
