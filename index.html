@@ -425,7 +425,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 18px;
-      min-height: 130px;
+      min-height: 110px;
       font-size: 14px;
       line-height: 1.6;
       white-space: pre-wrap;
@@ -435,7 +435,6 @@
     .answer-output.empty { color: var(--text-muted); font-style: italic; }
 
     .computed-table-wrap {
-      margin-top: 8px;
       border: 1px solid var(--border);
       border-radius: 8px;
       overflow-x: auto;
@@ -518,7 +517,7 @@
   </header>
 
   <main>
-    <!-- Collapsible Settings Panel (Safe for GitHub: No Key Hardcoded) -->
+    <!-- Collapsible Settings Panel -->
     <details class="card settings-panel" id="settingsPanel" open>
       <summary>
         <span class="summary-left">
@@ -587,22 +586,52 @@
       </div>
     </section>
 
-    <!-- Question & AI Briefing Workspace -->
+    <!-- 1. PRIMARY SECTION: Route Treatment Recommendations & Summary Table -->
+    <section class="card workspace-card" style="gap: 12px;">
+      <div class="workspace-header">
+        <h2>Tonight's Computed Route Summary &amp; Treatment Recommendations</h2>
+        <span style="font-size: 12.5px; font-weight: 600; color: var(--success);" id="treatmentCountBadge">0 routes recommended for treatment</span>
+      </div>
+      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: -4px;">
+        Highlighted rows indicate routes recommended for gritting based on Winter Service Plan rules, minimum ground temperature, and surface moisture within the 18-hour lookahead window.
+      </div>
+
+      <div class="computed-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Route Name</th>
+              <th>Priority</th>
+              <th>Depot</th>
+              <th>Salt Needed</th>
+              <th>Forecast Min</th>
+              <th>Freezing Hour</th>
+              <th>Wet</th>
+              <th>Recommendation</th>
+            </tr>
+          </thead>
+          <tbody id="computedTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. SECONDARY SECTION: AI Briefing Assistant (Moved Lower) -->
     <section class="card workspace-card">
       <div class="workspace-header">
-        <h2>Duty &amp; Senior Engineer Briefing Console</h2>
+        <h2>AI Briefing Assistant (Optional Inquiry)</h2>
         <div class="quick-prompts">
           <button type="button" class="chip" data-prompt="16:00 Duty Engineer Briefing: Based on tonight's computed ground temperatures, moisture test, depot stock, and available trucks, which routes should we grit tonight, how much salt is needed, and what time must each truck leave?">
-            16:00 Grit &amp; Dispatch Briefing
+            Grit &amp; Dispatch Briefing
           </button>
           <button type="button" class="chip" data-prompt="Senior Engineer Review: Which route should move up a priority next winter, and what else should we change? Compare R10 and R05.">
-            Senior Engineer: Priority Review
+            Priority Review
           </button>
         </div>
       </div>
 
       <div class="field">
-        <label for="questionBox">Question for the AI Briefing Assistant</label>
+        <label for="questionBox">Ask a specific question to the AI Assistant</label>
         <textarea id="questionBox" placeholder="Ask about tonight's gritting recommendation...">16:00 Duty Engineer Briefing: Based on tonight's computed ground temperatures, moisture test, depot stock, and available trucks, which routes should we grit tonight, how much salt is needed, and what time must each truck leave?</textarea>
       </div>
 
@@ -612,7 +641,7 @@
         </span>
         <div class="composer-buttons">
           <button type="button" class="btn-secondary" id="clearBtn">Clear</button>
-          <button type="button" class="btn-primary" id="sendBtn">Send</button>
+          <button type="button" class="btn-primary" id="sendBtn">Send Question</button>
         </div>
       </div>
 
@@ -623,35 +652,11 @@
 
       <div class="answer-section">
         <div class="answer-meta">
-          <strong style="color: var(--text);">Recommendation Output</strong>
+          <strong style="color: var(--text);">AI Response Output</strong>
           <span id="responseMeta">Ready</span>
         </div>
         <div class="answer-output empty" id="answerOutput">
-          Save your API key in Settings above and click Send to generate a grounded recommendation.
-        </div>
-
-        <!-- Tonight's Route Summary Table with Highlights -->
-        <div class="computed-table-wrap">
-          <div class="table-title">
-            <span>Tonight's Computed Route Summary &amp; Treatment Recommendations</span>
-            <span style="font-size: 11.5px; font-weight: normal; color: var(--success);" id="treatmentCountBadge">0 routes recommended for treatment</span>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Route Name</th>
-                <th>Priority</th>
-                <th>Depot</th>
-                <th>Salt Needed</th>
-                <th>Forecast Min</th>
-                <th>Freezing Hour</th>
-                <th>Wet</th>
-                <th>Recommendation</th>
-              </tr>
-            </thead>
-            <tbody id="computedTableBody"></tbody>
-          </table>
+          Save your API key in Settings above and click Send Question if you would like an AI-generated briefing analysis.
         </div>
       </div>
     </section>
@@ -866,7 +871,7 @@ Version 2026/27. Practice material for BDAIB at NCI.
         questionBox.value = "";
         errorBox.classList.remove("visible");
         answerOutput.className = "answer-output empty";
-        answerOutput.textContent = "Cleared. Enter a question and click Send.";
+        answerOutput.textContent = "Cleared. Enter a question and click Send Question.";
         responseMeta.textContent = "Ready";
       });
 
@@ -964,7 +969,7 @@ Version 2026/27. Practice material for BDAIB at NCI.
           errorBox.classList.add("visible");
         } finally {
           sendBtn.disabled = false;
-          sendBtn.textContent = "Send";
+          sendBtn.textContent = "Send Question";
         }
       }
 
