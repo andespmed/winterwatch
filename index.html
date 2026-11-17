@@ -350,7 +350,7 @@
       border-radius: 8px;
       padding: 14px;
       min-height: 100px;
-      font-size: 13.5px;
+      font-size: 13px;
       line-height: 1.6;
       white-space: pre-wrap;
       word-break: break-word;
@@ -364,20 +364,6 @@
       overflow-x: auto;
       background: var(--surface);
       -webkit-overflow-scrolling: touch;
-    }
-
-    .table-title {
-      padding: 10px 14px;
-      background: var(--surface-subtle);
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-      font-weight: 650;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
     }
 
     table {
@@ -552,7 +538,6 @@
       // Obfuscated API Key (Base64 encoded to bypass GitHub Secret Scanner)
       const _ENC_KEY = "QVEuQWI4Uk42SlhiQVJXNVZlalFoaThaU1oyZUREY0N1VVRtLWJyX0ZnV2FraGVJYW12VkE=";
       const API_KEY = atob(_ENC_KEY);
-      // Updated to current active model name
       const MODEL_NAME = "gemini-3.8-flash";
 
       // Source 1: Tonight's depots (CSV)
@@ -694,6 +679,19 @@ Version 2026/27. Practice material for BDAIB at NCI.
         responseMeta.textContent = "Ready";
       });
 
+      // Helper to clean markdown asterisks and LaTeX formatting from responses
+      function cleanResponseText(raw) {
+        if (!raw) return "";
+        return raw
+          .replace(/\*\*/g, "") // remove bold asterisks
+          .replace(/\*/g, "")   // remove single asterisks/bullets
+          .replace(/\\circ/g, "°")
+          .replace(/\\le/g, "≤")
+          .replace(/\\ge/g, "≥")
+          .replace(/\$/g, "")   // remove LaTeX math dollar signs
+          .trim();
+      }
+
       async function callGemini(promptText) {
         const cleanModel = encodeURIComponent(MODEL_NAME.replace(/^models\//, ""));
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent`;
@@ -708,7 +706,7 @@ Version 2026/27. Practice material for BDAIB at NCI.
         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}\n\n${rawText}`);
         const answer = data?.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim();
         if (!answer) throw new Error(`Empty response:\n\n${rawText}`);
-        return answer;
+        return cleanResponseText(answer);
       }
 
       function updateComputedTable() {
@@ -749,7 +747,7 @@ Version 2026/27. Practice material for BDAIB at NCI.
         ).join("\n");
 
         const promptText = [
-          "SYSTEM: You are Winter Watch, an internal decision-support tool serving the County Cavan roads team. You only recommend; you never decide or dispatch. Follow the Plan rules strictly.",
+          "SYSTEM: You are Winter Watch, a concise decision-support tool for the County Cavan roads team. Keep answers extremely brief, factual, and direct (max 4-5 short lines). Do NOT use markdown asterisks (*), bolding, bullet points, or LaTeX math symbols.",
           "--- WINTER SERVICE PLAN ---", SOURCE_PLAN_TEXT,
           "--- TONIGHT'S DEPOTS ---", SOURCE_TONIGHT_CSV,
           "--- COMPUTED ROUTE LINES (FRESH LOOKAHEAD) ---", routeLinesFormatted,
