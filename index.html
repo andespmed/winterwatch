@@ -6,25 +6,25 @@
   <title>Winter Watch — County Cavan Roads Team</title>
   <style>
     :root {
-      --bg: #f4f6f9;
-      --surface: #ffffff;
-      --surface-subtle: #f8fafc;
-      --border: #d8e0ea;
-      --border-strong: #bcc7d6;
-      --text: #16202e;
-      --text-muted: #526176;
-      --primary: #1a4b84;
-      --primary-hover: #133966;
-      --primary-soft: #eaf1fa;
-      --danger: #b42318;
-      --danger-soft: #fef3f2;
-      --danger-border: #fecdca;
-      --success: #067647;
-      --success-soft: #ecfdf3;
-      --warn: #b54708;
-      --warn-soft: #fffaeb;
-      --radius: 8px;
-      --shadow: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.04);
+      --bg: #0b0f19;
+      --surface: #131b2e;
+      --surface-subtle: #1a243f;
+      --border: #223055;
+      --border-strong: #334679;
+      --text: #f0f4f8;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-soft: rgba(59, 130, 246, 0.15);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.15);
+      --danger-border: #7f1d1d;
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.15);
+      --warn: #f59e0b;
+      --warn-soft: rgba(245, 158, 11, 0.15);
+      --radius: 10px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
@@ -60,16 +60,17 @@
     }
 
     .brand-badge {
-      width: 34px;
-      height: 34px;
-      border-radius: 7px;
-      background: var(--primary);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       color: #fff;
       display: grid;
       place-items: center;
       font-weight: 700;
       font-size: 14px;
       letter-spacing: 0.03em;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
     }
 
     .brand h1 {
@@ -77,6 +78,7 @@
       font-size: 17px;
       font-weight: 650;
       letter-spacing: -0.01em;
+      color: #fff;
     }
 
     .brand span {
@@ -97,22 +99,24 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface-subtle);
       font-weight: 500;
+      color: var(--text);
     }
 
     .dot {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: #98a2b3;
+      background: #64748b;
     }
 
     .dot.ready {
       background: var(--success);
+      box-shadow: 0 0 8px var(--success);
     }
 
     .dot.missing {
@@ -142,7 +146,7 @@
     details.settings-panel summary {
       list-style: none;
       cursor: pointer;
-      padding: 13px 18px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -151,6 +155,7 @@
       user-select: none;
       background: var(--surface);
       transition: background 0.15s ease;
+      color: #fff;
     }
 
     details.settings-panel summary::-webkit-details-marker {
@@ -217,10 +222,10 @@
       font-family: inherit;
       font-size: 13.5px;
       color: var(--text);
-      background: var(--surface);
+      background: var(--bg);
       border: 1px solid var(--border-strong);
       border-radius: 6px;
-      padding: 8px 10px;
+      padding: 9px 12px;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -229,7 +234,7 @@
     textarea:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(26, 75, 132, 0.14);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
     }
 
     .settings-actions {
@@ -242,7 +247,7 @@
       font-size: 13.5px;
       font-weight: 600;
       border-radius: 6px;
-      padding: 8px 14px;
+      padding: 9px 16px;
       cursor: pointer;
       border: 1px solid transparent;
       transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
@@ -257,6 +262,7 @@
     .btn-primary {
       background: var(--primary);
       color: #fff;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
     }
 
     .btn-primary:hover:not(:disabled) {
@@ -315,23 +321,24 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 12px 14px;
+      padding: 14px 16px;
       box-shadow: var(--shadow);
     }
 
     .metric-label {
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--text-muted);
     }
 
     .metric-value {
       font-size: 18px;
       font-weight: 700;
-      margin: 4px 0 2px;
+      margin: 5px 0 2px;
       font-variant-numeric: tabular-nums;
+      color: #fff;
     }
 
     .metric-sub {
@@ -340,15 +347,15 @@
     }
 
     .metric-sub.alert {
-      color: var(--danger);
+      color: #fca5a5;
       font-weight: 600;
     }
 
     .workspace-card {
-      padding: 18px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .workspace-header {
@@ -361,8 +368,9 @@
 
     .workspace-header h2 {
       margin: 0;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 650;
+      color: #fff;
     }
 
     .quick-prompts {
@@ -374,19 +382,21 @@
     .chip {
       font-size: 12px;
       font-weight: 500;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 999px;
       background: var(--primary-soft);
-      color: var(--primary);
-      border: 1px solid transparent;
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      cursor: pointer;
+      transition: background 0.15s ease;
     }
 
     .chip:hover {
-      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.25);
     }
 
     textarea#questionBox {
-      min-height: 82px;
+      min-height: 88px;
       resize: vertical;
       line-height: 1.5;
     }
@@ -412,7 +422,7 @@
       border-left: 4px solid var(--danger);
       border-radius: 6px;
       padding: 12px 14px;
-      color: var(--danger);
+      color: #fca5a5;
     }
 
     .error-box.visible {
@@ -423,6 +433,7 @@
       font-size: 13px;
       font-weight: 700;
       margin-bottom: 4px;
+      color: #f87171;
     }
 
     .error-detail {
@@ -431,15 +442,15 @@
       font-size: 12px;
       white-space: pre-wrap;
       word-break: break-word;
-      color: #7a271a;
+      color: #fca5a5;
     }
 
     .answer-section {
       border-top: 1px solid var(--border);
-      padding-top: 16px;
+      padding-top: 18px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
 
     .answer-meta {
@@ -453,15 +464,16 @@
     }
 
     .answer-output {
-      background: var(--surface-subtle);
+      background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 16px;
-      min-height: 120px;
+      border-radius: 8px;
+      padding: 18px;
+      min-height: 130px;
       font-size: 14px;
       line-height: 1.6;
       white-space: pre-wrap;
       word-break: break-word;
+      color: #e2e8f0;
     }
 
     .answer-output.empty {
@@ -472,36 +484,36 @@
     .computed-table-wrap {
       margin-top: 8px;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 8px;
       overflow-x: auto;
       background: var(--surface);
     }
 
     .table-title {
-      padding: 10px 12px;
+      padding: 12px 16px;
       background: var(--surface-subtle);
       border-bottom: 1px solid var(--border);
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 650;
-      color: var(--text);
+      color: #fff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 12.5px;
       text-align: left;
     }
 
     th,
     td {
-      padding: 8px 10px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
 
     th {
-      background: #fafbfc;
+      background: rgba(255, 255, 255, 0.02);
       font-weight: 600;
       color: var(--text-muted);
     }
@@ -514,25 +526,26 @@
       background: var(--surface-subtle);
       font-weight: 700;
       border-top: 2px solid var(--border-strong);
+      color: #fff;
     }
 
     .tag {
       display: inline-block;
-      padding: 2px 6px;
+      padding: 2px 8px;
       border-radius: 4px;
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 600;
     }
 
     .tag-yes {
       background: var(--warn-soft);
-      color: var(--warn);
-      border: 1px solid #fedf89;
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.3);
     }
 
     .tag-no {
-      background: var(--surface-subtle);
-      color: var(--text-muted);
+      background: rgba(100, 116, 139, 0.15);
+      color: #94a3b8;
       border: 1px solid var(--border);
     }
 
@@ -750,7 +763,7 @@
 
   <script>
     (function () {
-      const STORAGE_KEY = "winter_watch_ai_settings_v4";
+      const STORAGE_KEY = "winter_watch_ai_settings_v5";
 
       const DEFAULT_MODELS = {
         gemini: "gemini-2.5-flash",
@@ -1060,7 +1073,7 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) {
             providerSelect.value = "gemini";
-            modelInput.value = DEFAULT_MODELS.gemini;
+            modelInput.value = "gemini-2.5-flash"; // updated default model
             updateEndpointPreview();
             refreshConnectionBadge(null);
             return;
@@ -1068,7 +1081,7 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
           const parsed = JSON.parse(raw);
           const provider = parsed.provider || "gemini";
           providerSelect.value = provider;
-          modelInput.value = parsed.model || DEFAULT_MODELS[provider];
+          modelInput.value = parsed.model || "gemini-2.5-flash";
           apiKeyInput.value = parsed.apiKey || "";
           updateEndpointPreview();
           refreshConnectionBadge(parsed);
@@ -1077,7 +1090,7 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
           }
         } catch (err) {
           providerSelect.value = "gemini";
-          modelInput.value = DEFAULT_MODELS.gemini;
+          modelInput.value = "gemini-2.5-flash";
           updateEndpointPreview();
           refreshConnectionBadge(null);
         }
@@ -1108,16 +1121,16 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
       providerSelect.addEventListener("change", () => {
         const provider = providerSelect.value;
         const currentVal = modelInput.value.trim();
-        const isKnownDefault = Object.values(DEFAULT_MODELS).includes(currentVal);
+        const isKnownDefault = Object.values(DEFAULT_MODELS).includes(currentVal) || currentVal === "gemini-2.5-flash";
         if (!currentVal || isKnownDefault) {
-          modelInput.value = DEFAULT_MODELS[provider];
+          modelInput.value = provider === "gemini" ? "gemini-2.5-flash" : DEFAULT_MODELS[provider];
         }
         updateEndpointPreview();
       });
 
       saveBtn.addEventListener("click", () => {
         const provider = providerSelect.value;
-        const model = modelInput.value.trim() || DEFAULT_MODELS[provider];
+        const model = modelInput.value.trim() || (provider === "gemini" ? "gemini-2.5-flash" : DEFAULT_MODELS[provider]);
         const apiKey = apiKeyInput.value.trim();
 
         if (!apiKey) {
@@ -1283,7 +1296,7 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
         }
 
         const provider = (saved && saved.provider) || providerSelect.value;
-        const model = ((saved && saved.model) || modelInput.value.trim() || DEFAULT_MODELS[provider]).trim();
+        const model = ((saved && saved.model) || modelInput.value.trim() || "gemini-2.5-flash").trim();
         const apiKey = ((saved && saved.apiKey) || apiKeyInput.value.trim()).trim();
 
         if (!apiKey) {
@@ -1422,8 +1435,6 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
               <td>P${h.priority}</td>
               <td>${h.depot}</td>
               <td>${h.nights}</td>
-              <td>${h.salt_total.toFixed(2)} t</td>
-              <td>${h.nights}</td>
               <td>${h.runs}</td>
               <td>${h.salt_total.toFixed(2)} t</td>
               <td>${h.ice_total}</td>
@@ -1433,22 +1444,6 @@ Version 2026/27. Practice material for BDAIB at NCI. The roads team, its routes 
             </tr>
           `;
         }).join("");
-
-        // Re-mapping history summary table columns cleanly
-        historyTableBody.innerHTML = historyRes.summaryList.map(h => `
-          <tr>
-            <td><strong>${h.route_id}</strong> ${h.route}</td>
-            <td>P${h.priority}</td>
-            <td>${h.depot}</td>
-            <td>${h.nights}</td>
-            <td>${h.runs}</td>
-            <td>${h.salt_total.toFixed(2)} t</td>
-            <td>${h.ice_total}</td>
-            <td>${h.ice_gritted}</td>
-            <td>${h.ice_not_gritted}</td>
-            <td>${h.no_salt_nights}</td>
-          </tr>
-        `).join("");
 
         historyTableFoot.innerHTML = `
           <tr>
